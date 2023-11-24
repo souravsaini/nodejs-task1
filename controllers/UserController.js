@@ -124,6 +124,23 @@ module.exports = {
   getSummary: catchAsync(async (req, res) => {
     //NOTE: Could have used aggregated pipeline to compute average age, but virtual properties are not accessible in aggregated pipeline
 
+    //Example:
+    // const aggregationResult = await Model.Student.aggregate([
+    //   {
+    //     $group: {
+    //       _id: null,
+    //       totalStudents: { $sum: 1 },
+    //       totalAge: { $sum: "$age" } // Using the virtual 'age' field
+    //     }
+    //   },
+    //   {
+    //     $project: {
+    //       _id: 0,
+    //       averageAge: { $divide: ["$totalAge", "$totalStudents"] }
+    //     }
+    //   }
+    // ]);
+
     const students = await Model.Student.find();
     const totalAge = students.reduce((total, student) => {
       return total + student.age;
